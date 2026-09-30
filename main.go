@@ -25,11 +25,11 @@ type Link struct {
 }
 
 var links = []Link{
-	{"Page source", "https://github.com/mafien0/mafien0"},
-	{"GitHub     ", "https://github.com/mafien0"},
-	{"Lichess    ", "https://lichess.org/@/mafien0"},
-	{"Steam      ", "https://steamcommunity.com/id/mafien0"},
-	{"Twitter    ", "https://x.com/mafien0"},
+	{"Page source", "https://github.com/mafien0/mafien0.fyi"},
+	{"GitHub", "https://github.com/mafien0"},
+	{"Lichess", "https://lichess.org/@/mafien0"},
+	{"Steam", "https://steamcommunity.com/id/mafien0"},
+	{"Twitter", "https://x.com/mafien0"},
 }
 
 // -- Badges --
