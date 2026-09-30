@@ -2,42 +2,74 @@ package main
 
 import (
 	"embed"
+	"html/template"
 	"io/fs"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
 // Embed static files at compile time
 //
-//go:embed public/*
+//go:embed public/* public/badges/* templates/*
 var staticFiles embed.FS
 
-type DataItem struct {
-	ID    int    `json:"id"`
-	Name  string `json:"name"`
-	Value int    `json:"value"`
+var tmpl = template.Must(template.ParseFS(staticFiles, "templates/*.html"))
+
+// -- Links --
+
+type Link struct {
+	Name string
+	Link string
 }
 
-type DataResponse struct {
-	Data      []DataItem `json:"data"`
-	Total     int        `json:"total"`
-	Timestamp string     `json:"timestamp"`
+var links = []Link{
+	{"Page source", "https://github.com/mafien0/mafien0"},
+	{"GitHub     ", "https://github.com/mafien0"},
+	{"Lichess    ", "https://lichess.org/@/mafien0"},
+	{"Steam      ", "https://steamcommunity.com/id/mafien0"},
+	{"Twitter    ", "https://x.com/mafien0"},
 }
 
-type ItemResponse struct {
-	Item      DataItem `json:"item"`
-	Timestamp string   `json:"timestamp"`
+// -- Badges --
+
+type Badge struct {
+	Name string
+	Link string
+	Path string
 }
 
+var badges = []Badge{
+	{"mafien0", "https://mafien0.fyi", "/static/badges/mafien0.png"},
+	{"nixos", "https://nixos.org", "/static/badges/nixos.png"},
+	{"nowindows", "https://nixos.org", "/static/badges/nowindows.gif"},
+	{"linuxnow", "https://distrowatch.com", "/static/badges/linux.gif"},
+	{"eeto", "https://eightyeightthirty.one", "/static/badges/eeto.png"},
+	{"ublock", "https://github.com/gorhill/uBlock", "/static/badges/ublock.png"},
+	{"helium", "https://helium.computer", "/static/badges/helium.png"},
+	{"ltt", "https://www.youtube.com/LinusTechTips", "/static/badges/ltt.png"},
+	{"steam", "https://store.steampowered.com", "/static/badges/steam.gif"},
+	{"oneshot", "https://store.steampowered.com/app/420530", "/static/badges/oneshot.png"},
+	{"jsab", "https://store.steampowered.com/app/531510", "/static/badges/jsab.gif"},
+	{"celeste", "https://www.celestegame.com", "/static/badges/celeste.gif"},
+	{"ltg", "https://lowtierfailure.com", "/static/badges/ltg.png"},
+	{"qbit", "https://www.qbittorrent.org", "/static/badges/qbit.png"},
+	{"minecraft", "https://prismlauncher.org", "/static/badges/minecraft.gif"},
+	{"rust", "https://rust-lang.org", "/static/badges/rust.gif"},
+	{"bnix", "https://nixos.org", "/static/badges/bnix.gif"},
+	{"neovim", "https://neovim.io", "/static/badges/neovim.png"},
+	{"blender", "https://www.blender.org", "/static/badges/blender.gif"},
+}
+
+// -- rest --
+
+// TODO: drop gin, i need pure go
 func main() {
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 
 	// Serve embedded static files
-	// Strip "public" prefix so files are served at root (e.g., /index.html, /favicon.ico)
 	publicFS, _ := fs.Sub(staticFiles, "public")
 	r.StaticFS("/static", http.FS(publicFS))
 
@@ -52,7 +84,7 @@ func main() {
 	})
 
 	// Serve favicon at root
-	r.GET("/favicon.ico", func(c *gin.Context) {
+	r.GET("/favicon.png", func(c *gin.Context) {
 		data, err := staticFiles.ReadFile("public/favicon.ico")
 		if err != nil {
 			c.Status(http.StatusNotFound)
@@ -61,9 +93,21 @@ func main() {
 		c.Data(http.StatusOK, "image/x-icon", data)
 	})
 
-	// API routes
-	r.GET("/api/data", getData)
-	r.GET("/api/items/:id", getItem)
+	// htmx
+	r.GET("/badges", func(c *gin.Context) {
+		c.Header("Content-Type", "text/html; charset=utf-8")
+		if err := tmpl.ExecuteTemplate(c.Writer, "badges", badges); err != nil {
+			c.String(http.StatusInternalServerError, err.Error())
+		}
+	})
+
+	// htmx
+	r.GET("/links", func(c *gin.Context) {
+		c.Header("Content-Type", "text/html; charset=utf-8")
+		if err := tmpl.ExecuteTemplate(c.Writer, "links", links); err != nil {
+			c.String(http.StatusInternalServerError, err.Error())
+		}
+	})
 
 	// Get port from environment variable (Vercel sets this)
 	port := os.Getenv("PORT")
@@ -72,31 +116,4 @@ func main() {
 	}
 
 	r.Run(":" + port)
-}
-
-func getData(c *gin.Context) {
-	items := []DataItem{
-		{ID: 1, Name: "Sample Item 1", Value: 100},
-		{ID: 2, Name: "Sample Item 2", Value: 200},
-		{ID: 3, Name: "Sample Item 3", Value: 300},
-	}
-
-	c.JSON(http.StatusOK, DataResponse{
-		Data:      items,
-		Total:     len(items),
-		Timestamp: time.Now().UTC().Format(time.RFC3339),
-	})
-}
-
-func getItem(c *gin.Context) {
-	id := c.Param("id")
-
-	c.JSON(http.StatusOK, ItemResponse{
-		Item: DataItem{
-			ID:    1,
-			Name:  "Sample Item " + id,
-			Value: 100,
-		},
-		Timestamp: time.Now().UTC().Format(time.RFC3339),
-	})
 }

@@ -1,0 +1,103 @@
+:root {
+	/* gruvbox base 16 yay */
+	--base00: #1d2021;
+	--base01: #282828;
+	--base02: #504945;
+	--base03: #665c54;
+	--base04: #bdae93;
+	--base05: #d5c4a1;
+	--base06: #ebdbb2;
+	--base07: #fbf1c7;
+	--base08: #fb4934;
+	--base09: #fe8019;
+	--base0A: #fabd2f;
+	--base0B: #b8bb26;
+	--base0C: #8ec07c;
+	--base0D: #83a598;
+	--base0E: #d3869b;
+	--base0F: #d65d0e;
+}
+
+* {
+	font-family: "Fira Code", monospace;
+	font-weight: bold;
+}
+
+h1,
+h2,
+h3,
+h4,
+p {
+	color: var(--base04)
+}
+
+header {
+	display: block;
+	margin: auto;
+	text-align: center;
+	justify-content: center;
+	align-items: center;
+}
+
+header pre {
+	color: var(--base0A);
+}
+
+/* body */
+body {
+	background-color: var(--base00);
+	display: block;
+	margin: auto;
+	max-width: 100ch;
+}
+
+hr {
+	border: none;
+	border-top: 1px solid var(--base04);
+}
+
+
+.links-title {
+	margin-bottom: -15px;
+}
+
+.links {
+	list-style: none;
+	padding: 0;
+}
+
+.links li,
+.links a {
+	color: var(--base04);
+}
+
+.links li {
+	display: grid;
+	grid-template-columns: 15ch 1fr;
+	gap: 1rem;
+}
+
+.badges img {
+	width: 88px;
+	height: 31px;
+}
+
+/* footer */
+footer,
+footer p {
+	color: var(--base03);
+}
+
+.name-cool {
+	background: linear-gradient(45deg, var(--base08), var(--base09));
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+}
+
+.htmx-cool {
+	background: linear-gradient(45deg, var(--base0B), var(--base0C));
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+}

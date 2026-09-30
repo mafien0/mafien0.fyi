@@ -19,11 +19,13 @@ go.work.sum
 vendor/
 
 # Build output
+/out/
 gin
 main
 test-server
 
 # Environment files
+.direnv
 .env
 .env*.local
 
