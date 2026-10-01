@@ -45,7 +45,9 @@ var badges = []Badge{
 	{"linuxnow", "https://distrowatch.com", "/static/badges/linux.gif"},
 	{"eeto", "https://eightyeightthirty.one", "/static/badges/eeto.png"},
 	{"ublock", "https://github.com/gorhill/uBlock", "/static/badges/ublock.png"},
+	{"nofirefox", "https://helium.computer", "/static/badges/nofirefox.png"},
 	{"helium", "https://helium.computer", "/static/badges/helium.png"},
+	{"nowindows", "https://helium.computer", "/static/badges/nochrome.gif"},
 	{"ltt", "https://www.youtube.com/LinusTechTips", "/static/badges/ltt.png"},
 	{"steam", "https://store.steampowered.com", "/static/badges/steam.gif"},
 	{"oneshot", "https://store.steampowered.com/app/420530", "/static/badges/oneshot.png"},
@@ -55,14 +57,15 @@ var badges = []Badge{
 	{"qbit", "https://www.qbittorrent.org", "/static/badges/qbit.png"},
 	{"minecraft", "https://prismlauncher.org", "/static/badges/minecraft.gif"},
 	{"rust", "https://rust-lang.org", "/static/badges/rust.gif"},
+	{"rust", "https://rust-lang.org", "/static/badges/rust2.gif"},
 	{"bnix", "https://nixos.org", "/static/badges/bnix.gif"},
 	{"neovim", "https://neovim.io", "/static/badges/neovim.png"},
 	{"blender", "https://www.blender.org", "/static/badges/blender.gif"},
+	{"nodrm", "https://www.defectivebydesign.org", "/static/badges/drm.gif"},
+	{"hatemicrosoft", "https://en.wikipedia.org/wiki/Criticism_of_Microsoft", "/static/badges/hatems.png"},
 }
 
 // -- rest --
-// actually this is funny because rest is like the rest of code,
-// but at the same time, its REST api, you get it?
 
 func main() {
 	mux := http.NewServeMux()
