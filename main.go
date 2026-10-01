@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 )
 
 //go:embed public/* public/badges/* templates/*
@@ -101,7 +102,12 @@ func main() {
 	// htmx
 	mux.HandleFunc("GET /links", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		if err := tmpl.ExecuteTemplate(w, "links", links); err != nil {
+		width, _ := strconv.Atoi(r.Header.Get("X-Screen-Width"))
+		name := "links"
+		if width > 0 && width < 700 {
+			name = "links-mobile"
+		}
+		if err := tmpl.ExecuteTemplate(w, name, links); err != nil {
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		}
 	})
