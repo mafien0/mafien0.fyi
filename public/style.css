@@ -21,6 +21,7 @@
 * {
 	font-family: "Fira Code", monospace;
 	font-weight: bold;
+	box-sizing: border-box;
 }
 
 h1,
@@ -49,7 +50,15 @@ body {
 	display: block;
 	margin: auto;
 	max-width: 100ch;
+	padding: 0 1rem;
 }
+
+@media (max-width: 700px) {
+	.title {
+		font-size: 2.4vw;
+	}
+}
+
 
 hr {
 	border: none;
@@ -66,18 +75,28 @@ hr {
 	padding: 0;
 }
 
-.links li,
 .links a {
 	color: var(--base04);
+	overflow-wrap: anywhere;
 }
 
 .links li {
+	color: var(--base04);
 	display: grid;
 	grid-template-columns: 15ch 1fr;
 	gap: 1rem;
 }
 
+@media (max-width: 700px) {
+	.links li {
+		grid-template-columns: 1fr;
+		gap: 0;
+	}
+}
+
 .badges img {
+	image-rendering: pixelated;
+	border-radius: 0;
 	width: 88px;
 	height: 31px;
 }
