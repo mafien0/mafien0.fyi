@@ -80,6 +80,16 @@ func main() {
 		w.Write(data)
 	})
 
+	// Fake favicon.ico
+	mux.HandleFunc("GET /favicon.ico", func(w http.ResponseWriter, r *http.Request) {
+		data, err := staticFiles.ReadFile("public/favicon.png")
+		if err != nil {
+			http.Error(w, "Not Found", http.StatusNotFound)
+		}
+		w.Header().Set("Content-Type", "image/png")
+		w.Write(data)
+	})
+
 	// htmx
 	mux.HandleFunc("GET /badges", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
