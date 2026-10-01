@@ -79,6 +79,7 @@ func main() {
 		data, err := staticFiles.ReadFile("public/index.html")
 		if err != nil {
 			http.Error(w, "Not Found", http.StatusNotFound)
+			return
 		}
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		w.Write(data)
@@ -89,6 +90,7 @@ func main() {
 		data, err := staticFiles.ReadFile("public/favicon.png")
 		if err != nil {
 			http.Error(w, "Not Found", http.StatusNotFound)
+			return
 		}
 		w.Header().Set("Content-Type", "image/png")
 		w.Write(data)
