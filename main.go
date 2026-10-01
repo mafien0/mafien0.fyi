@@ -4,14 +4,11 @@ import (
 	"embed"
 	"html/template"
 	"io/fs"
+	"log"
 	"net/http"
 	"os"
-
-	"github.com/gin-gonic/gin"
 )
 
-// Embed static files at compile time
-//
 //go:embed public/* public/badges/* templates/*
 var staticFiles embed.FS
 
@@ -63,49 +60,39 @@ var badges = []Badge{
 }
 
 // -- rest --
+// actually this is funny because rest is like the rest of code,
+// but at the same time, its REST api, you get it?
 
-// TODO: drop gin, i need pure go
 func main() {
-	gin.SetMode(gin.ReleaseMode)
-	r := gin.Default()
+	mux := http.NewServeMux()
 
 	// Serve embedded static files
 	publicFS, _ := fs.Sub(staticFiles, "public")
-	r.StaticFS("/static", http.FS(publicFS))
+	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.FS(publicFS))))
 
 	// Serve index.html at root
-	r.GET("/", func(c *gin.Context) {
+	mux.HandleFunc("GET /{$}", func(w http.ResponseWriter, r *http.Request) {
 		data, err := staticFiles.ReadFile("public/index.html")
 		if err != nil {
-			c.String(http.StatusNotFound, "Not found")
-			return
+			http.Error(w, "Not Found", http.StatusNotFound)
 		}
-		c.Data(http.StatusOK, "text/html; charset=utf-8", data)
-	})
-
-	// Serve favicon at root
-	r.GET("/favicon.png", func(c *gin.Context) {
-		data, err := staticFiles.ReadFile("public/favicon.ico")
-		if err != nil {
-			c.Status(http.StatusNotFound)
-			return
-		}
-		c.Data(http.StatusOK, "image/x-icon", data)
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		w.Write(data)
 	})
 
 	// htmx
-	r.GET("/badges", func(c *gin.Context) {
-		c.Header("Content-Type", "text/html; charset=utf-8")
-		if err := tmpl.ExecuteTemplate(c.Writer, "badges", badges); err != nil {
-			c.String(http.StatusInternalServerError, err.Error())
+	mux.HandleFunc("GET /badges", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		if err := tmpl.ExecuteTemplate(w, "badges", badges); err != nil {
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		}
 	})
 
 	// htmx
-	r.GET("/links", func(c *gin.Context) {
-		c.Header("Content-Type", "text/html; charset=utf-8")
-		if err := tmpl.ExecuteTemplate(c.Writer, "links", links); err != nil {
-			c.String(http.StatusInternalServerError, err.Error())
+	mux.HandleFunc("GET /links", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		if err := tmpl.ExecuteTemplate(w, "links", links); err != nil {
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		}
 	})
 
@@ -115,5 +102,6 @@ func main() {
 		port = "3000"
 	}
 
-	r.Run(":" + port)
+	// Serve
+	log.Fatal(http.ListenAndServe(":"+port, mux))
 }
