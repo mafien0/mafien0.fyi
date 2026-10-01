@@ -94,6 +94,10 @@ hr {
 	}
 }
 
+.badges {
+	text-align: center;
+}
+
 .badges img {
 	image-rendering: pixelated;
 	border-radius: 0;
