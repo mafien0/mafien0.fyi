@@ -105,6 +105,11 @@ hr {
 	height: 31px;
 }
 
+.counter {
+	display: block;
+	margin-inline: auto;
+}
+
 /* footer */
 footer,
 footer p {
