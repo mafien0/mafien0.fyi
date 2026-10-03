@@ -106,6 +106,7 @@ hr {
 }
 
 .counter {
+	image-rendering: pixelated;
 	display: block;
 	margin-inline: auto;
 	max-width: 100%;
