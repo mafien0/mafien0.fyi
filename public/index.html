@@ -43,7 +43,10 @@
 	<h2 class="links-title">Links</h2>
 
 	<!-- i will not count that as javascript -->
-	<ul class="links" hx-get="/links" hx-trigger="load" hx-headers='js:{"X-Screen-Width": window.innerWidth}'>
+	<ul class="links"
+		hx-get="/links"
+		hx-trigger="load, resize from:window delay:200ms"
+		hx-headers='js:{"X-Screen-Width": window.innerWidth}'>
 	</ul>
 
 	<hr>
