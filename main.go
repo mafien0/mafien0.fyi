@@ -27,7 +27,6 @@ var links = []Link{
 	{"GitHub", "https://github.com/mafien0"},
 	{"Lichess", "https://lichess.org/@/mafien0"},
 	{"Steam", "https://steamcommunity.com/id/mafien0"},
-	{"Twitter", "https://x.com/mafien0"},
 }
 
 // -- Badges --
